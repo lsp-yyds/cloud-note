@@ -37,7 +37,7 @@ public class UserService {
             return resultInfo;
         }
 
-        // password = DigestUtil.md5Hex(username);
+        // password = DigestUtil.md5Hex(password);
 
         if (!password.equals(user.getUpwd())){
             resultInfo.setCode(0);

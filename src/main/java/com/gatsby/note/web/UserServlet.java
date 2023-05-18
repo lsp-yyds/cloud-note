@@ -29,7 +29,17 @@ public class UserServlet extends HttpServlet {
         String actionName = req.getParameter("actionName");
         if ("login".equals(actionName)){
             userLogin(req,resp);
+        }else if("logout".equals(actionName)){
+            userLogout(req,resp);
         }
+    }
+
+    private void userLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.getSession().invalidate();
+        Cookie cookie = new Cookie("user",null);
+        cookie.setMaxAge(0);
+        resp.addCookie(cookie);;
+        resp.sendRedirect("login.jsp");
     }
 
     private void userLogin(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -51,7 +61,7 @@ public class UserServlet extends HttpServlet {
                 resp.addCookie(cookie);
             }
 
-            resp.sendRedirect("index.jsp");
+            resp.sendRedirect("index");
         }else{
             req.setAttribute("resultInfo",resultInfo);
             req.getRequestDispatcher("login.jsp").forward(req,resp);
