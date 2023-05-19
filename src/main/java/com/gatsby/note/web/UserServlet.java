@@ -7,6 +7,7 @@ import com.gatsby.note.vo.ResultInfo;
 import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +25,7 @@ import java.lang.reflect.Field;
  */
 
 @WebServlet("/user")
+@MultipartConfig
 public class UserServlet extends HttpServlet {
 
     private UserService userService = new UserService();
@@ -44,9 +46,19 @@ public class UserServlet extends HttpServlet {
             userHead(req,resp);
         }else if("checkNick".equals(actionName)){
             checkNick(req,resp);
+        }else if("updateUser".equals(actionName)){
+            updateUser(req,resp);
         }
     }
 
+    // 修改用户信息
+    private void updateUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ResultInfo<User> resultInfo = userService.updateUser(req,resp);
+        req.setAttribute("resultInfo",resultInfo);
+        req.getRequestDispatcher("user?actionName=userCenter").forward(req,resp);
+    }
+
+    // 检查昵称是否唯一
     private void checkNick(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String nick = req.getParameter("nick");
         User user = (User) req.getSession().getAttribute("user");
@@ -55,6 +67,7 @@ public class UserServlet extends HttpServlet {
         resp.getWriter().close();
     }
 
+    // 显示用户头像
     private void userHead(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String head = req.getParameter("imageName");
         String realPath = req.getServletContext().getRealPath("/WEB-INF/upload/");
@@ -71,6 +84,7 @@ public class UserServlet extends HttpServlet {
         FileUtils.copyFile(file,resp.getOutputStream());
     }
 
+    // 用户中心模块
     private void userCenter(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("changePage","user/info.jsp");
         req.getRequestDispatcher("index.jsp").forward(req,resp);
@@ -84,6 +98,7 @@ public class UserServlet extends HttpServlet {
         resp.sendRedirect("login.jsp");
     }
 
+    // 用户登录模块
     private void userLogin(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
