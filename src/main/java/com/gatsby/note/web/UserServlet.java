@@ -1,8 +1,10 @@
 package com.gatsby.note.web;
 
+import cn.hutool.core.io.FileUtil;
 import com.gatsby.note.po.User;
 import com.gatsby.note.service.UserService;
 import com.gatsby.note.vo.ResultInfo;
+import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,7 +12,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 /**
  * @PACKAGE_NAME: com.gatsby.note.web
@@ -26,12 +30,50 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        req.setAttribute("menu_page","user");
+
         String actionName = req.getParameter("actionName");
         if ("login".equals(actionName)){
             userLogin(req,resp);
         }else if("logout".equals(actionName)){
             userLogout(req,resp);
+        } else if("userCenter".equals(actionName)){
+            userCenter(req,resp);
+        }else if("userHead".equals(actionName)){
+            userHead(req,resp);
+        }else if("checkNick".equals(actionName)){
+            checkNick(req,resp);
         }
+    }
+
+    private void checkNick(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String nick = req.getParameter("nick");
+        User user = (User) req.getSession().getAttribute("user");
+        Integer code = userService.checkNick(nick,user.getUserId());
+        resp.getWriter().write(code + "");
+        resp.getWriter().close();
+    }
+
+    private void userHead(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String head = req.getParameter("imageName");
+        String realPath = req.getServletContext().getRealPath("/WEB-INF/upload/");
+        File file = new File(realPath + "/" + head);
+        String pic = head.substring(head.lastIndexOf(".")+1);
+        if ("PNG".equalsIgnoreCase(pic)){
+            resp.setContentType("image/png");
+        }else if ("JPG".equalsIgnoreCase(pic) || "JPEG".equalsIgnoreCase(pic)){
+            resp.setContentType("image/jpeg");
+        }else if("GIF".equalsIgnoreCase(pic)){
+            resp.setContentType("image/gif");
+        }
+
+        FileUtils.copyFile(file,resp.getOutputStream());
+    }
+
+    private void userCenter(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("changePage","user/info.jsp");
+        req.getRequestDispatcher("index.jsp").forward(req,resp);
     }
 
     private void userLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {

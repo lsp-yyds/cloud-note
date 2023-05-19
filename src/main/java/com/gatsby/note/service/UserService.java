@@ -15,7 +15,7 @@ import com.gatsby.note.vo.ResultInfo;
 public class UserService {
     private UserDao userDao = new UserDao();
 
-    public ResultInfo<User> userLogin(String username, String password){
+    public ResultInfo<User> userLogin(String username, String password) {
         ResultInfo<User> resultInfo = new ResultInfo<>();
 
         User u = new User();
@@ -48,5 +48,20 @@ public class UserService {
         resultInfo.setCode(1);
         resultInfo.setResult(user);
         return resultInfo;
+    }
+
+    public Integer checkNick(String nick, Integer userId) {
+
+        if (StrUtil.isBlank(nick)){
+            return 0;
+        }
+
+        User user = userDao.queryUserByNickAndUserId(nick, userId);
+
+        if (user != null){
+            return 0;
+        }
+
+        return 1;
     }
 }

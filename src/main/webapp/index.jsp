@@ -11,6 +11,7 @@
     <script src="resources/js/jquery-1.11.3.js"></script>
     <script src="resources/bootstrap/js/bootstrap.js"></script>
     <script src="resources/sweetalert/sweetalert2.min.js"></script>
+    <script src="resources/js/util.js"></script>
     <!-- 配置文件 -->
     <script type="text/javascript" src="./主页_files/ueditor.config.js"></script>
     <!-- 编辑器源码文件 -->
@@ -39,11 +40,11 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="main"><i class="glyphicon glyphicon-cloud"></i>&nbsp;主&nbsp;&nbsp;页</a></li>
-                <li><a href="note"><i class="glyphicon glyphicon-pencil"></i>&nbsp;发表云记</a></li>
-                <li><a href="type"><i class="glyphicon glyphicon-list"></i>&nbsp;类别管理</a></li>
-                <li><a href="user"><i class="glyphicon glyphicon-user"></i>&nbsp;个人中心</a>
-                <li><a href="report"><i class="glyphicon glyphicon-signal"></i>&nbsp;数据报表</a></li>
+                <li <c:if test="${menu_page=='index'}">class="active"</c:if>><a href="main"><i class="glyphicon glyphicon-cloud"></i>&nbsp;主&nbsp;&nbsp;页</a></li>
+                <li <c:if test="${menu_page=='note'}">class="active"</c:if>><a href="note"><i class="glyphicon glyphicon-pencil"></i>&nbsp;发表云记</a></li>
+                <li <c:if test="${menu_page=='type'}">class="active"</c:if>><a href="type"><i class="glyphicon glyphicon-list"></i>&nbsp;类别管理</a></li>
+                <li <c:if test="${menu_page=='user'}">class="active"</c:if>><a href="user?actionName=userCenter"><i class="glyphicon glyphicon-user"></i>&nbsp;个人中心</a>
+                <li <c:if test="${menu_page=='report'}">class="active"</c:if>><a href="report"><i class="glyphicon glyphicon-signal"></i>&nbsp;数据报表</a></li>
                 
                 </ul>
             <form class="navbar-form navbar-right" role="search" action="main">
@@ -60,7 +61,7 @@
     <div class="row-fluid">
         <div class="col-md-3">
             <div class="data_list">
-                <div class="data_list_title"><span class="glyphicon glyphicon-user"></span>&nbsp;个人中心&nbsp;&nbsp;&nbsp;&nbsp;<a href="logout?actionName=logout">退出</a></div>
+                <div class="data_list_title"><span class="glyphicon glyphicon-user"></span>&nbsp;个人中心&nbsp;&nbsp;&nbsp;&nbsp;<a href="user?actionName=logout">退出</a></div>
                 <div class="userimg">
                     <img src="resources/images/h2.jpg">
                 </div>

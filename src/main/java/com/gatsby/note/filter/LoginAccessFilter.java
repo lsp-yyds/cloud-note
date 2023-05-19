@@ -9,6 +9,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @PACKAGE_NAME: com.gatsby.note.filter
@@ -54,6 +55,14 @@ public class LoginAccessFilter implements Filter {
                 filterChain.doFilter(req,resp);
                 return;
             }
+            /*if (actionName != null){
+                filterChain.doFilter(req,resp);
+                return;
+            }*/
+//            else if("userCenter".equals(actionName)){
+//                filterChain.doFilter(req,resp);
+//                return;
+//            }
         }
 
         User user =(User) req.getSession().getAttribute("user");
@@ -71,8 +80,11 @@ public class LoginAccessFilter implements Filter {
                     String[] val = value.split("-");
                     String username = val[0];
                     String password = val[1];
-                    String url = "user?actionName=login&username="+username+"&password="+password;
-                    req.getRequestDispatcher(url).forward(req,resp);
+                    String url = "user?actionName=login&rem=1&username="+username+"&password="+password;
+                    // url = new String(url.getBytes("UTF-8"),"ISO-8859-1");
+
+                    // req.getRequestDispatcher(url).forward(req,resp);
+                    resp.sendRedirect(url);
                     return;
                 }
             }

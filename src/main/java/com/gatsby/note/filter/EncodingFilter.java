@@ -23,7 +23,7 @@ import java.io.IOException;
  * 服务器默认的解析编码为ISO-8859-1，不支持中文
  *
  */
-// @WebFilter("/*")
+@WebFilter("/*")
 public class EncodingFilter implements Filter {
 
     @Override
