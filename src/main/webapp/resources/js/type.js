@@ -32,7 +32,7 @@ function deleteType(typeId){
 		// 如果是，发送ajax请求后台（类型ID）
 		$.ajax({
 			type:"post",
-			url:"typeServlet",
+			url:"type",
 			data:{
 				actionName:"delete",
 				typeId:typeId
@@ -114,9 +114,12 @@ function openUpdateDialog(typeId) {
 	// 2.2 得到tr的具体单元格的值
 	var typeName = tr.children().eq(1).text();
 	// 2.3 将类型名称赋值给模态框中的文本框、将类型ID赋值给模态框中的隐藏域
-	$("#typename").val(typeName);
+	$("#typeName").val(typeName);
+	var typeId = tr.children().eq(0).text();
 	$("#typeId").val(typeId);
-	
+
+	$("#msg").html("");
+
 	// 3、打开模态框
 	$("#myModal").modal("show");
 	
@@ -139,7 +142,9 @@ $("#addBtn").click(function(){
 	
 	// 2、清空文本框和隐藏域的值
 	$("#typeId").val("");
-	$("#typename").val("");
+	$("#typeName").val("");
+
+	$("#msg").html("");
 	
 	// 3、打开模态框
 	$("#myModal").modal("show");
@@ -169,8 +174,8 @@ $("#addBtn").click(function(){
  */		
 $("#btn_submit").click(function(){
 	// 1、获取参数（文本框：类型名称、隐藏域：类型ID）
+	var typeName = $("#typeName").val();
 	var typeId = $("#typeId").val();
-	var typeName = $("#typename").val();
 	
 	// 2、判断参数是否为空（类型名称）
 	if (isEmpty(typeName)) {
@@ -182,26 +187,28 @@ $("#btn_submit").click(function(){
 	// 3、发送ajax请求后台，添加或修改类型记录，回调函数返回resultInfo对象
 	$.ajax({
 		type:"post",
-		url:"typeServlet",
+		url:"type",
 		data:{
 			actionName:"addOrUpdate",
-			typeId:typeId,
-			typeName:typeName
+			typeName:typeName,
+			typeId: typeId
 		},
 		success:function(result){
-			console.log(result);
+			// console.log(result);
 			// 如果code=1，表示更新成功，执行Dom操作
 			if (result.code == 1) {
 				// 关闭模态框
 				$("#myModal").modal("hide");
 				// 判断typeId是否为空
  				if (isEmpty(typeId)) {
- 					var key = result.result; // 后台添加记录成功后返回的主键
+ 					// var key = result.result; // 后台添加记录成功后返回的主键
  					// 如果为空，执行添加的DOM操作
- 					addDom(key,typeName);
+ 					// addDom(key,typeName);
+					addDom(typeName, result.result)
  				} else {
  					// 如果不为空，执行修改的DOM操作
- 					updateDom(typeId,typeName);
+ 					// updateDom(typeId,typeName);
+					updateDom(typeName, typeId);
  				}
 				
 			} else {
@@ -222,7 +229,7 @@ $("#btn_submit").click(function(){
  * @param typeId
  * @param typeName
  */
-function updateDom(typeId,typeName) {
+function updateDom(typeName,typeId) {
 	/* 1、修改指定tr记录  */
 	// a、通过id选择器获取tr记录
 	var tr = $("#tr_" + typeId);
@@ -249,7 +256,7 @@ function updateDom(typeId,typeName) {
  * @param typeId
  * @param typeName
  */
-function addDom(typeId,typeName) {
+function addDom(typeName, typeId) {
 	/* 1、添加tr记录  */
 	// 拼接tr元素
 	var tr = '<tr id="tr_'+typeId+'"><td>'+typeId+'</td><td>'+typeName+'</td>';
