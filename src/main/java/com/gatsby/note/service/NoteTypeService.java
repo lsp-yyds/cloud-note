@@ -68,6 +68,7 @@ public class NoteTypeService {
         }
 
         Integer key = null;
+
         if (StrUtil.isBlank(typeId)){
             key = typeDao.addType(typeName,userId);
         }else {

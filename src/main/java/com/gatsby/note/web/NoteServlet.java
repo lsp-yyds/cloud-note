@@ -1,5 +1,6 @@
 package com.gatsby.note.web;
 
+import cn.hutool.core.util.StrUtil;
 import com.gatsby.note.po.Note;
 import com.gatsby.note.po.NoteType;
 import com.gatsby.note.po.User;
@@ -38,7 +39,31 @@ public class NoteServlet extends HttpServlet {
             noteView(req,resp);
         } else if("addOrUpdate".equals(actionName)){
             addOrUpdate(req,resp);
+        } else if("detail".equals(actionName)){
+            noteDetail(req,resp);
+        } else if("delete".equals(actionName)){
+            noteDelete(req,resp);
         }
+    }
+
+    // 删除云记
+    private void noteDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String noteId = req.getParameter("noteId");
+        Integer code = noteService.deleteNote(noteId);
+
+        resp.getWriter().write(code + "");
+        resp.getWriter().close();
+    }
+
+    private void noteDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String noteId = req.getParameter("noteId");
+
+        Note note = noteService.findNoteById(noteId);
+
+        req.setAttribute("note",note);
+
+        req.setAttribute("changePage","note/detail.jsp");
+        req.getRequestDispatcher("index.jsp").forward(req,resp);
     }
 
     private void addOrUpdate(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
@@ -46,17 +71,31 @@ public class NoteServlet extends HttpServlet {
         String title = req.getParameter("title");
         String content = req.getParameter("content");
 
-        ResultInfo<Note> resultInfo = noteService.addOrUpdate(typeId,title,content);
+        String noteId = req.getParameter("noteId");
+
+        ResultInfo<Note> resultInfo = noteService.addOrUpdate(typeId,title,content,noteId);
 
         if (resultInfo.getCode() == 1){
             resp.sendRedirect("index");
         }else {
             req.setAttribute("resultInfo",resultInfo);
-            req.getRequestDispatcher("note?actionName=view").forward(req,resp);
+
+            String url = "note?actionName=view";
+            if (!StrUtil.isBlank(noteId)){
+                url += "&noteId=" + noteId;
+            }
+            req.getRequestDispatcher(url).forward(req,resp);
         }
     }
 
     private void noteView(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String noteId = req.getParameter("noteId");
+
+        Note note = noteService.findNoteById(noteId);
+
+        req.setAttribute("noteInfo",note);
+
         User user = (User) req.getSession().getAttribute("user");
 
         List<NoteType> typeList = new NoteTypeService().findTypeList(user.getUserId());

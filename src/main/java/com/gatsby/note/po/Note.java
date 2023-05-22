@@ -20,4 +20,6 @@ public class Note {
     private String content;
     private Integer typeId;
     private Date pubTime;
+
+    private String typeName;
 }
