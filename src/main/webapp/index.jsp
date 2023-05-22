@@ -12,10 +12,11 @@
     <script src="resources/bootstrap/js/bootstrap.js"></script>
     <script src="resources/sweetalert/sweetalert2.min.js"></script>
     <script src="resources/js/util.js"></script>
+    
     <!-- 配置文件 -->
-    <script type="text/javascript" src="./主页_files/ueditor.config.js"></script>
+    <script type="text/javascript" src="./resources/ueditor/ueditor.config.js"></script>
     <!-- 编辑器源码文件 -->
-    <script type="text/javascript" src="./主页_files/ueditor.all.js"></script>
+    <script type="text/javascript" src="./resources/ueditor/ueditor.all.js"></script>
     <style type="text/css">
         body {
             padding-top: 60px;
@@ -41,7 +42,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li <c:if test="${menu_page=='index'}">class="active"</c:if>><a href="index"><i class="glyphicon glyphicon-cloud"></i>&nbsp;主&nbsp;&nbsp;页</a></li>
-                <li <c:if test="${menu_page=='note'}">class="active"</c:if>><a href="note"><i class="glyphicon glyphicon-pencil"></i>&nbsp;发表云记</a></li>
+                <li <c:if test="${menu_page=='note'}">class="active"</c:if>><a href="note?actionName=view"><i class="glyphicon glyphicon-pencil"></i>&nbsp;发表云记</a></li>
                 <li <c:if test="${menu_page=='type'}">class="active"</c:if>><a href="type?actionName=list"><i class="glyphicon glyphicon-list"></i>&nbsp;类别管理</a></li>
                 <li <c:if test="${menu_page=='user'}">class="active"</c:if>><a href="user?actionName=userCenter"><i class="glyphicon glyphicon-user"></i>&nbsp;个人中心</a>
                 <li <c:if test="${menu_page=='report'}">class="active"</c:if>><a href="report"><i class="glyphicon glyphicon-signal"></i>&nbsp;数据报表</a></li>
@@ -88,8 +89,7 @@
             
             </div>
             <div class="data_list">
-                <div class="data_list_title">
-					<span class="glyphicon glyphicon-list-alt">
+                <div class="data_lis"glyphicon glyphicon-list-alt">
 					</span>&nbsp;云记类别
                 </div>
                 
